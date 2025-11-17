@@ -1,13 +1,11 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import { Welcome } from './components/Welcome'
 import { ProductCard } from './components/ProductCard'
+import { Counter } from './components/Counter'
+import { UserState } from './components/UserState'
+import { TodoList } from './components/TodoList'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
         <div>
@@ -24,6 +22,14 @@ function App() {
          * Break it on purpose (will error if uncommented):
          * <ProductCard name="Sticker" price="free" />
          */}
+      </div>
+
+      <hr style={{ marginTop: 32, marginBottom: 32 }} />
+      
+      <div style={{ display: 'grid', gap: 16, marginTop: 16 }}>
+        <Counter />
+        <UserState />
+        <TodoList />
       </div>
     </>
   )
