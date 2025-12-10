@@ -23,7 +23,7 @@ app.get('/goodbye', (req, res) => {
   return sayGoodbye(req as GoodbyeRequest, res as Response<FarewellResponse>)
 })
 
-// Exercise 1: LoginBody type
+// Exercise 1: Create a LoginBody type
 type LoginBody = {
   email: string
   password: string
@@ -32,9 +32,7 @@ type LoginResponse = { message: string }
 type LoginRequest = Request<Record<string, never>, LoginResponse, LoginBody>
 
 export const loginUser = (req: LoginRequest, res: Response<LoginResponse>) => {
-  // Using req.body to demonstrate the LoginBody type is properly typed
-  const { email } = req.body
-  res.json({ message: `Login successful for ${email}` })
+  res.json({ message: `Login successful for ${req.body.email}` })
 }
 
 app.post('/login', (req, res) => {
@@ -42,17 +40,17 @@ app.post('/login', (req, res) => {
 
   // Guard the request before casting to the stricter controller type.
   if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password are required' })
+    return res.status(400).json({ error: 'Bad Request' })
   }
 
   if (typeof email !== 'string' || typeof password !== 'string') {
-    return res.status(400).json({ error: 'Email and password must be strings' })
+    return res.status(400).json({ error: 'Bad Request' })
   }
 
   return loginUser(req as LoginRequest, res as Response<LoginResponse>)
 })
 
-// Exercise 2: ProductQuery type
+// Exercise 2: Typing a GET route with query
 type ProductQuery = {
   page: string
   limit: string
@@ -70,13 +68,13 @@ app.get('/products', (req, res) => {
 
   // Guard the request before casting to the stricter controller type.
   if (typeof page !== 'string' || typeof limit !== 'string') {
-    return res.status(400).json({ error: 'Page and limit query parameters are required' })
+    return res.status(400).json({ error: 'Bad Request' })
   }
 
   return getProducts(req as ProductQueryRequest, res as Response<ProductQueryResponse>)
 })
 
-// Exercise 3: Route with params + body
+// Exercise 3: Typing a route with params + body
 type UpdateProductParams = {
   id: string
 }
@@ -91,9 +89,9 @@ export const updateProduct = (req: UpdateProductRequest, res: Response<UpdatePro
   const { id } = req.params
   const { name, price } = req.body
   
-  console.log('Product ID:', id)
-  console.log('Product Name:', name)
-  console.log('Product Price:', price)
+  console.log('ID:', id)
+  console.log('Name:', name)
+  console.log('Price:', price)
   
   res.json({ message: `Product ${id} updated` })
 }
@@ -104,15 +102,15 @@ app.put('/products/:id', (req, res) => {
 
   // Guard the request before casting to the stricter controller type.
   if (!id || typeof id !== 'string') {
-    return res.status(400).json({ error: 'Product ID is required' })
+    return res.status(400).json({ error: 'Bad Request' })
   }
 
   if (!name || typeof name !== 'string') {
-    return res.status(400).json({ error: 'Product name is required and must be a string' })
+    return res.status(400).json({ error: 'Bad Request' })
   }
 
   if (typeof price !== 'number') {
-    return res.status(400).json({ error: 'Product price is required and must be a number' })
+    return res.status(400).json({ error: 'Bad Request' })
   }
 
   return updateProduct(req as UpdateProductRequest, res as Response<UpdateProductResponse>)
